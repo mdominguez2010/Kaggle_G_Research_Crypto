@@ -1,5 +1,9 @@
+"""
+This script separates the cryptos (train an test sets) into their own dataset,
+then tests to confirm with a pearson and spearman rank correlations. We compare
+correlations with the original dataset to ensure high correlation.
+"""
 import pandas as pd
-import numpy as np
 import pickle
 from scipy.stats import pearsonr
 from scipy.stats import spearmanr
@@ -21,7 +25,6 @@ for i in range(len(asset_details)):
     with open(f"./data/{current_asset_name}_train.pickle", "wb") as f:
         pickle.dump(current_group, f)
         
-    # print(f"Asset_ID: {current_id}, Asset_Name: {current_asset_name}")
 
 # Now let's do the same for test sets      
 for i in range(len(asset_details)):
@@ -31,9 +34,8 @@ for i in range(len(asset_details)):
     with open(f"./data/{current_asset_name}_test.pickle", "wb") as f:
         pickle.dump(current_group, f)
     
-    # print(f"Asset_ID: {i}, Asset_Name: {asset_details.Asset_Name[i]}")
 
-# Ensure consistency in distribution of newly created datasets
+# Ensure consistency in the distributions of newly created datasets
 for i in range(len(asset_details)):
     current_group_number = asset_details.Asset_ID[i]
     current_asset_name = asset_details.Asset_Name[i]
@@ -43,8 +45,7 @@ for i in range(len(asset_details)):
         
     comparison = train[train["Asset_ID"] == current_group_number].set_index("timestamp")
 
-    # print(eth.info())  
-    # print(comparison.info())
+
     n_steps_to_correlate = 500000
     first_apple = current_dataset.Close.values[-n_steps_to_correlate:]
     second_apple = comparison.Close.values[-n_steps_to_correlate:]
